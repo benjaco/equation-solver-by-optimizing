@@ -174,13 +174,14 @@ function drawChart(){
 
     // grid
     {
-        let xMagnitude = (Math.ceil(Math.log10(xDiff ))-1)
-        let xSpace = 10**xMagnitude
-        let yMagnitude = (Math.ceil(Math.log10(yDiff))-1)
-        let ySpace = 10**yMagnitude
+        let xSpace = parseFloat(xDiff.toPrecision(1))/10;
+        let ySpace = parseFloat(yDiff.toPrecision(1))/10 ;
 
-        let xLine = Math.floor(viewPort.minX * xSpace)/xSpace
-        let yLine = Math.floor(viewPort.minY * ySpace)/ySpace
+        let xMagnitude = Math.max(0, String(xSpace%1).length - 2)
+        let yMagnitude = Math.max(0, String(ySpace%1).length - 2)
+
+        let xLine = Math.floor(parseFloat(viewPort.minX.toPrecision(1)) * xSpace)/xSpace
+        let yLine = Math.floor(parseFloat(viewPort.minY.toPrecision(1))  * ySpace)/ySpace
 
     
         plot_graph_context.fillStyle = "#eee";
@@ -188,37 +189,72 @@ function drawChart(){
 
         console.log(viewPort)
 
-        while(xLine < viewPort.maxX){
-            plot_graph_context.beginPath()
-            if(Math.abs( xLine ) < 0.0000000001){
-                plot_graph_context.lineWidth = 3;
+        getSteps = (start, step, vstart, vstop) => {
+            let steps = []
+
+            if(vstart < 0 && vstop > 0){
+
+
+                let deq = 0 - step;
+                while(deq > vstart){
+                    steps.push(deq)
+                    deq -= step
+                }
+
+                steps.push(0)
+
+                
+                let inc = 0 + step;
+                while(inc < vstop){
+                    steps.push(inc)
+                    inc += step
+                }
+
+
+
             }else{
-                plot_graph_context.lineWidth = 1;
+                while(start < vstop){
+                    steps.push(start)
+                    start+=step
+                }
+
             }
-            
-            plot_graph_context.moveTo(xToPx(xLine), 0);
-            plot_graph_context.lineTo(xToPx(xLine), plot_graph.width);
-            plot_graph_context.stroke();
 
-            plot_graph_context.fillText(xLine.toFixed( Math.min(0, xMagnitude)*-1 ), xToPx(xLine), plot_graph.height - 10);
-
-            xLine += xSpace;
+            return steps;
         }
-        while(yLine < viewPort.maxY){
+
+        for(let x of getSteps(xLine, xSpace, viewPort.minX, viewPort.maxX)){
             plot_graph_context.beginPath()
-            if(Math.abs( yLine ) < 0.0000000001){
+            if(Math.abs( x ) < 0.0000000001){
                 plot_graph_context.lineWidth = 3;
             }else{
                 plot_graph_context.lineWidth = 1;
             }
             
-            plot_graph_context.moveTo(0, yToPx(yLine));
-            plot_graph_context.lineTo(plot_graph.width, yToPx(yLine));
+            plot_graph_context.moveTo(xToPx(x), 0);
+            plot_graph_context.lineTo(xToPx(x), plot_graph.width);
             plot_graph_context.stroke();
 
-            plot_graph_context.fillText(yLine.toFixed( Math.min(0, yMagnitude)*-1 ), 10, yToPx(yLine));
+            plot_graph_context.fillText(x.toFixed( xMagnitude ), xToPx(x), plot_graph.height - 10);
 
-            yLine += ySpace;
+        }
+
+
+        for(let y of getSteps(yLine, ySpace, viewPort.minY, viewPort.maxY)){
+            
+            plot_graph_context.beginPath()
+            if(Math.abs( y ) < 0.0000000001){
+                plot_graph_context.lineWidth = 3;
+            }else{
+                plot_graph_context.lineWidth = 1;
+            }
+            
+            plot_graph_context.moveTo(0, yToPx(y));
+            plot_graph_context.lineTo(plot_graph.width, yToPx(y));
+            plot_graph_context.stroke();
+
+            plot_graph_context.fillText(y.toFixed( yMagnitude ), 10, yToPx(y));
+
         }
     }
 

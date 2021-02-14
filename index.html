@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Solver</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+     body>div{
+         min-height: 100vh;
+         flex-grow: 1; width: calc( 50vw - 20px);
+         padding:  20px;
+     }
+     body{
+        display: flex; font-family: Helvetica, sans-serif;
+color: #eee;
+background-color: #222222;
+     }
+     p{
+         margin: 5px 0;
+     }
+     input, h1{
+         margin-bottom: 30px;
+     }
+     #inp{
+         background-color: #333333;
+        box-shadow: 0 0 20px rgba(255,255,244, .1);
+
+     }
+     #res > div{
+         margin-bottom: 20px;
+     }
+    </style>
+</head>
+<body>
+    <div id="inp">
+        <h1>Equation solver by training</h1>
+
+        <label>
+            <p>javasript function, eg. <pre>Math.sin(x * (Math.PI/6) + c) * d + a</pre></p>
+            <input type="text" id="function_def" value="a*x**2 + b*x + c">
+        </label>
+
+        <label>
+            <p>Initial values, eg. <pre>{d: 1.5, c: -2, a: 3.5}</pre></p>
+            <input type="text" id="value" value="{a: 0, b:0, c:0}">
+        </label>
+
+        <label>
+            <p>Points to fit, eg. <pre>0: 2.22, 1: 2.76, 2: 3.5</pre></p>
+            <!-- <input type="text" id="points" value="0: 2.22, 1: 2.76, 2: 3.5, 3: 4.16, 4: 4.72, 5: 5.02, 6: 4.9, 7: 4.58, 8: 3.98, 9: 3.1, 10: 2.36, 11: 2.02, 12: 2.06, 13: 2.22"> -->
+            <input type="text" id="points" value="-3: 4, 0: -2, 4: 5">
+        </label>
+
+        <label>
+            <p>Optimizer</p>
+            <select id="optimizer">
+                <option value="diff">Differance</option>
+                <option value="diff2" selected>Differance^2</option>
+            </select>
+        </label>
+
+        <br><br>
+
+        <button id="go">Go</button>
+
+
+        <br><br>
+
+        <button id="stop">Stop</button>
+            
+    </div>
+    <div id="res">
+        <div>
+            <p>Last values</p>
+            <pre id="last_values"></pre>
+
+            <p>Last error: <pre id="last_error"></pre></p>
+        </div>
+        <div>
+            <p>Error over time</p>
+            <canvas id="error_graph" style="width: 100%; height: 200px;" height="400">
+
+            </canvas>
+        </div>
+        <div>
+            <p>Plot</p>
+            <canvas id="plot_graph" style="width: 100%; height: 200px;" height="400">
+
+            </canvas>
+        </div>
+    </div>
+
+    <script src="client.js"></script>
+</body>
+</html>
